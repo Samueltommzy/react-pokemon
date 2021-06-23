@@ -1,16 +1,26 @@
-import { Link, Typography } from '@material-ui/core';
-import React, { useState }from 'react'
+import { CircularProgress, Link, Typography } from '@material-ui/core';
+import React, { useEffect, useState }from 'react'
 import mockData from '../data';
+import axios from 'axios';
 
 import { capitalizeFirst } from './pokedex';
-function Pokemon(props) {
+
+const  Pokemon = (props) => {
   const { match } = props;
   const { params} = match
-  const { pokemonid }  = params
-  const [pokedexData,setPokedexData] = useState(mockData[pokemonid]);
+  const { pokemonid }  = params;
+  const [pokedexData,setPokedexData] = useState();
 
-  const displayPokemon = () => {
-    
+  useEffect(()=>{
+    async function getPokemon(){
+      const pokemon = await axios.get( `https://pokeapi.co/api/v2/pokemon/${pokemonid}/`);
+      console.log(pokemon.data,'ddddddddddddd');
+      setPokedexData(pokemon.data);
+    }
+    getPokemon();
+  },[pokemonid])
+
+  const displayPokemon = () => { 
     const { id, name, species, height, weight, types, sprites} = pokedexData;
     const pokemonImg = `https://pokeres.bastionbot.org/images/pokemon/${id}.png`;
     const { front_default } = sprites;
@@ -45,7 +55,15 @@ function Pokemon(props) {
     )
   }
    return (
-     displayPokemon()
+     <>
+      {
+        pokedexData ? (
+          displayPokemon()
+        )
+        :
+        <CircularProgress/>
+      }
+     </>
    )
 }
 

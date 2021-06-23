@@ -1,7 +1,8 @@
 import { AppBar, Card, CardContent, Grid, Toolbar,CircularProgress, CardMedia, Typography } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import mockData from '../data';
+import axios from 'axios';
 
 const useStyles = makeStyles({
   pokedexStyle :{
@@ -26,7 +27,7 @@ export const capitalizeFirst = (data) => {
 }
 const Pokedex = (props) => {
   const classes = useStyles();
-  const [pokedexData,setPokedexData] = useState(mockData);
+  const [pokedexData,setPokedexData] = useState({});
   const { history } = props
   // const getPokemonCard = (id) => {
   //   console.log(id)
@@ -44,6 +45,22 @@ const Pokedex = (props) => {
   //     </Card>
   //   </Grid> 
   // }
+  useEffect(()=>{
+    async function getPokeData(){
+      const pokemonData = await axios.get(`https://pokeapi.co/api/v2/pokemon?limit=100`);
+      console.log(pokemonData.data)
+      const pokeData = {};
+      pokemonData.data.results.forEach((pokemon,index)=>{
+        pokeData[index+1] = {
+          id : index + 1,
+          name : pokemon.name,
+          sprite : `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${index+1}.png`
+        }
+      });
+      setPokedexData(pokeData);
+    }
+    getPokeData();
+  },[])
   return (
     <>
     <AppBar position = 'static'>
@@ -53,9 +70,9 @@ const Pokedex = (props) => {
       pokedexData ? (
         <Grid container spacing = {2} className = {classes.pokedexStyle}>
           {
-            Object.keys(mockData).map((k,idx)=>{
+            Object.keys(pokedexData).map((k,idx)=>{
               const {id,name} = pokedexData[k];
-              console.log(id,name)
+             
               const sprite = `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${id}.png`;
               return <Grid item xs = {12} sm = {4} key = {id}>
                 <Card onClick = {()=>history.push(`/${id}`)}>
