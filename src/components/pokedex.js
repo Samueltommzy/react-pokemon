@@ -21,13 +21,13 @@ const useStyles = makeStyles({
  * capitalize first letter
  * @param {String} data 
  */
-const capitalizeFirst = (data) => {
+export const capitalizeFirst = (data) => {
   return data.toLowerCase().replace(data[0],data[0].toUpperCase())
 }
-const Pokedex = () => {
+const Pokedex = (props) => {
   const classes = useStyles();
   const [pokedexData,setPokedexData] = useState(mockData);
-
+  const { history } = props
   // const getPokemonCard = (id) => {
   //   console.log(id)
   //   const data = pokedexData[id]
@@ -58,7 +58,7 @@ const Pokedex = () => {
               console.log(id,name)
               const sprite = `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${id}.png`;
               return <Grid item xs = {12} sm = {4} key = {id}>
-                <Card>
+                <Card onClick = {()=>history.push(`/${id}`)}>
                   <CardMedia
                     className = {classes.cardMedia}
                     image ={sprite}
