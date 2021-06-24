@@ -1,10 +1,10 @@
-import { AppBar, Card, CardContent, Grid, Toolbar,CircularProgress, CardMedia, Typography } from '@material-ui/core';
-import { makeStyles } from '@material-ui/core/styles';
+import { AppBar, Card, CardContent, Grid, Toolbar,CircularProgress, CardMedia, Typography, TextField } from '@material-ui/core';
+import { fade, makeStyles } from '@material-ui/core/styles';
 import React, { useEffect, useState } from 'react'
-import mockData from '../data';
 import axios from 'axios';
+import { Search } from '@material-ui/icons';
 
-const useStyles = makeStyles({
+const useStyles = makeStyles((theme)=>({
   pokedexStyle :{
     paddingLeft: '30px',
     paddingTop : '20px',
@@ -15,8 +15,23 @@ const useStyles = makeStyles({
   },
   cardContent:{
     textAlign: 'center'
+  },
+  searchContainer :{
+    display : 'flex',
+    backgroundColor:fade(theme.palette.common.white,0.2),
+    // padding: '6px',
+    margin:'8px'
+  },
+  searchIcon : {
+    alignSelf : 'flex-end',
+    marginBottom: '3px',
+    marginLeft:'4px'
+  },
+  searchInput : {
+    width: '200px',
+    margin: '4px'
   }
-});
+}));
 
 /**
  * capitalize first letter
@@ -28,6 +43,8 @@ export const capitalizeFirst = (data) => {
 const Pokedex = (props) => {
   const classes = useStyles();
   const [pokedexData,setPokedexData] = useState({});
+  const [filter, setFilter] = useState('');
+
   const { history } = props
   // const getPokemonCard = (id) => {
   //   console.log(id)
@@ -61,10 +78,20 @@ const Pokedex = (props) => {
     }
     getPokeData();
   },[])
+
+  const handleSearchChange = (e) => {
+    setFilter(e.target.value);
+    console.log(e.target.value,'f')
+  }
   return (
     <>
     <AppBar position = 'static'>
-      <Toolbar></Toolbar>
+      <Toolbar>
+        <div className = {classes.searchContainer}>
+          <Search className = {classes.searchIcon}/>
+          <TextField className = {classes.searchInput} label ='Pokemon' variant = 'standard' onChange = {(e)=>handleSearchChange(e)} />
+        </div>
+      </Toolbar>
     </AppBar>
     {
       pokedexData ? (
@@ -73,8 +100,8 @@ const Pokedex = (props) => {
             Object.keys(pokedexData).map((k,idx)=>{
               const {id,name} = pokedexData[k];
              
-              const sprite = `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${id}.png`;
-              return <Grid item xs = {12} sm = {4} key = {id}>
+              const sprite = `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${id}.png`;  
+              return (pokedexData[k].name.includes(filter)||pokedexData[k].name.includes(filter.toLowerCase())) && <Grid item xs = {12} sm = {4} key = {id}>
                 <Card onClick = {()=>history.push(`/${id}`)}>
                   <CardMedia
                     className = {classes.cardMedia}

@@ -1,6 +1,5 @@
 import { CircularProgress, Link, Typography } from '@material-ui/core';
 import React, { useEffect, useState }from 'react'
-import mockData from '../data';
 import axios from 'axios';
 
 import { capitalizeFirst } from './pokedex';
@@ -28,9 +27,9 @@ const  Pokemon = (props) => {
       <>
       <Typography variant = 'h1'>
         {`${id}. ${capitalizeFirst(name)}`}
-        <img src = {front_default}></img>
+        <img src = {front_default} alt = ''></img>
       </Typography>
-      <img src = {pokemonImg} style = {{height:'300px',width:'200px'}}></img>
+      <img src = {pokemonImg} style = {{height:'300px',width:'200px'}} alt = ''></img>
       <Typography variant = 'h2'>
         Pokemon info
       </Typography>
