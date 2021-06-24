@@ -46,22 +46,7 @@ const Pokedex = (props) => {
   const [filter, setFilter] = useState('');
 
   const { history } = props
-  // const getPokemonCard = (id) => {
-  //   console.log(id)
-  //   const data = pokedexData[id]
-  //   const sprite = "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/1.png";
-  //   return <Grid item xs = {12} sm = {4} key = {id}>
-  //     <Card>
-  //       <CardMedia
-  //         image ={sprite}
-  //         style = {{width:'120px',height:'120px'}}
-  //       /> 
-  //       <CardContent>
-  //         {1}
-  //       </CardContent>
-  //     </Card>
-  //   </Grid> 
-  // }
+  
   useEffect(()=>{
     async function getPokeData(){
       const pokemonData = await axios.get(`https://pokeapi.co/api/v2/pokemon?limit=100`);
