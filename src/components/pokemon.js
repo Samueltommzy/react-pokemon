@@ -1,14 +1,33 @@
-import { CircularProgress, Link, Typography } from '@material-ui/core';
+import { Card, CircularProgress, Grid, Link, makeStyles, Paper, Typography } from '@material-ui/core';
 import React, { useEffect, useState }from 'react'
 import axios from 'axios';
 
 import { capitalizeFirst } from './pokedex';
+import { ArrowBack } from '@material-ui/icons';
+
+const useStyles = makeStyles({
+  topSpace:{
+    marginBottom : '70px'
+  },
+  pokemonName : {
+    textAlign: 'center',
+    color: '#87ceeb',
+    marginTop : '3px',
+    fontStyle: 'bold'
+  },
+  pokemomInfo :{
+    margin: '10px',
+    color: 'green',
+    fontSize: '12px'
+  }
+})
 
 const  Pokemon = (props) => {
   const { match } = props;
   const { params} = match
   const { pokemonid }  = params;
   const [pokedexData,setPokedexData] = useState();
+  const classes = useStyles();
 
   useEffect(()=>{
     async function getPokemon(){
@@ -17,39 +36,70 @@ const  Pokemon = (props) => {
       setPokedexData(pokemon.data);
     }
     getPokemon();
-  },[pokemonid])
+  },[pokemonid]);
+
+ 
 
   const displayPokemon = () => { 
+   
     const { id, name, species, height, weight, types, sprites} = pokedexData;
     const pokemonImg = `https://pokeres.bastionbot.org/images/pokemon/${id}.png`;
-    const { front_default } = sprites;
+    const { front_default,back_default,front_shiny } = sprites
     return (
       <>
-      <Typography variant = 'h1'>
-        {`${id}. ${capitalizeFirst(name)}`}
-        <img src = {front_default} alt = ''></img>
-      </Typography>
-      <img src = {pokemonImg} style = {{height:'300px',width:'200px'}} alt = ''></img>
-      <Typography variant = 'h2'>
-        Pokemon info
-      </Typography>
-      <Typography >
-        {'Species: '}
-        <Link href = {species.url}>{species.name}</Link>
-      </Typography>
-      <Typography >
-        {`Weight: ${weight}`}
-      </Typography>
-      <Typography >
-        {`Height: ${height}`}
-      </Typography>
-      <Typography variant = 'h6' >
-        {`Types:`}
-        {types?.map(t=>
-          <Typography>{t['type'].name}</Typography>
-          )
-        }
-      </Typography>
+      <Grid container>
+        <Grid item xs = {12} className = {classes.topSpace}> 
+         
+        </Grid>  
+          <Grid container item>
+            <Grid item xs = {1} sm = {2}  md = {3}>
+            </Grid> 
+            <Grid item xs = {10} sm = {8} md = {6}>
+              <Paper>
+                <ArrowBack/>
+              <Typography variant = 'h4' className = {classes.pokemonName}>
+                {`${capitalizeFirst(name)}`}
+                <img src = {front_default} alt = ''></img>
+              </Typography>
+              <img src = {pokemonImg} style = {{height:'300px',width:'200px'}} alt = '' className = {classes.pokemomImage}></img>
+              <img src = {back_default} style = {{height:'300px',width:'200px'}} alt = '' className = {classes.pokemomImage}></img>
+              <img src = {front_shiny} style = {{height:'300px',width:'200px'}} alt = '' className = {classes.pokemomImage}></img>
+              <Typography variant = 'h2' className = {classes.pokemonName}>
+                Pokemon info
+              </Typography>
+              <Grid container item className = {classes.pokemomInfo}>
+                <Grid item xs = {4}>
+                  <Typography >
+                    {'Species: '}
+                    <Link href = {species.url}>{species.name}</Link>
+                  </Typography>
+                </Grid> 
+                <Grid item xs = {4}>
+                  <Typography >
+                    {`Weight: ${weight}kg`}
+                  </Typography>
+                </Grid> 
+                <Grid item xs = {4}>
+                <Typography >
+                {`Height: ${height}cm`}
+                </Typography>
+                </Grid>
+              </Grid>
+              {`Types:`}
+              <Typography variant = 'h6' >
+                {types?.map(t=>
+                  <Typography>{t['type'].name}</Typography>
+                  )
+                }
+              </Typography>
+              </Paper>
+            </Grid>
+            <Grid item xs = {1} sm = {2} md = {3}>
+
+            </Grid>
+          </Grid>
+       
+      </Grid>
       </>
     )
   }

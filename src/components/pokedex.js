@@ -50,7 +50,6 @@ const Pokedex = (props) => {
   useEffect(()=>{
     async function getPokeData(){
       const pokemonData = await axios.get(`https://pokeapi.co/api/v2/pokemon?limit=100`);
-      console.log(pokemonData.data)
       const pokeData = {};
       pokemonData.data.results.forEach((pokemon,index)=>{
         pokeData[index+1] = {
@@ -66,7 +65,6 @@ const Pokedex = (props) => {
 
   const handleSearchChange = (e) => {
     setFilter(e.target.value);
-    console.log(e.target.value,'f')
   }
   return (
     <>
