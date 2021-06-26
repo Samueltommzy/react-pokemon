@@ -1,6 +1,7 @@
 import { AppBar, Card, CardContent, Grid, Toolbar,CircularProgress, CardMedia, Typography, TextField } from '@material-ui/core';
 import { fade, makeStyles } from '@material-ui/core/styles';
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useState } from 'react';
+import Pagination from '@material-ui/lab/Pagination';
 import axios from 'axios';
 import { Search } from '@material-ui/icons';
 
@@ -30,6 +31,12 @@ const useStyles = makeStyles((theme)=>({
   searchInput : {
     width: '200px',
     margin: '4px'
+  },
+  paginationStyle : {
+    '& > *': {
+      marginTop: theme.spacing(2),
+      // marginLeft: theme.spacing(2),
+    },
   }
 }));
 
@@ -44,27 +51,40 @@ const Pokedex = (props) => {
   const classes = useStyles();
   const [pokedexData,setPokedexData] = useState({});
   const [filter, setFilter] = useState('');
-
+  const [limit,setLimit] = useState(9);
+  const [offset,setOffset] = useState(0);
+  const [totalPage,setTotalPage] = useState(90);
   const { history } = props
   
   useEffect(()=>{
     async function getPokeData(){
-      const pokemonData = await axios.get(`https://pokeapi.co/api/v2/pokemon?limit=100`);
+      const pokemonData = await axios.get(`https://pokeapi.co/api/v2/pokemon?limit=${limit}&offset=${offset}`);
       const pokeData = {};
       pokemonData.data.results.forEach((pokemon,index)=>{
         pokeData[index+1] = {
-          id : index + 1,
+          id : offset+index + 1,
           name : pokemon.name,
           sprite : `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${index+1}.png`
         }
       });
+      console.log('ddd',pokemonData.data)
       setPokedexData(pokeData);
     }
     getPokeData();
-  },[])
+  },[offset,limit])
 
   const handleSearchChange = (e) => {
     setFilter(e.target.value);
+  }
+  const handlePagination = (event,value)=>{
+    if(value === 1){
+      setOffset(0)
+    }
+    else{
+      const offsetVal = (value * limit) - limit ;
+      setOffset(offsetVal);
+      console.log('offset',offsetVal)
+    }
   }
   return (
     <>
@@ -98,10 +118,24 @@ const Pokedex = (props) => {
               </Grid> 
             })
           }
+         
         </Grid>
+        
       ):
       <CircularProgress/>
     }
+    <Grid container item>
+      <Grid item xs = {1} sm = {4} ></Grid>
+      <Grid item xs = {10} sm = {6} className = {classes.paginationStyle}> 
+        <Pagination
+          count = {totalPage}
+          color = 'primary'
+          onChange = {handlePagination}
+        >
+        </Pagination>
+      </Grid>
+      <Grid item xs = {1} sm = {4} ></Grid>
+    </Grid> 
     </>
   )
 }

@@ -10,7 +10,6 @@ const useStyles = makeStyles({
     marginBottom : '70px'
   },
   pokemonName : {
-    // textAlign: 'center',
     color: '#87ceeb',
     // marginTop : '3px',
     fontStyle: 'bold'
