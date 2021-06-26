@@ -1,4 +1,4 @@
-import { Card, CircularProgress, Grid, Link, makeStyles, Paper, Typography } from '@material-ui/core';
+import { CircularProgress, Grid, IconButton, Link, makeStyles, Paper, Typography } from '@material-ui/core';
 import React, { useEffect, useState }from 'react'
 import axios from 'axios';
 
@@ -10,20 +10,28 @@ const useStyles = makeStyles({
     marginBottom : '70px'
   },
   pokemonName : {
-    textAlign: 'center',
+    // textAlign: 'center',
     color: '#87ceeb',
-    marginTop : '3px',
+    // marginTop : '3px',
     fontStyle: 'bold'
   },
   pokemomInfo :{
     margin: '10px',
     color: 'green',
     fontSize: '12px'
+  },
+  pokemonTypes:{
+    margin : '5px',
+    color: 'red',
+    fontSize: '12px'
+  },
+  pokemonImage:{
+    margin: '5px'
   }
 })
 
 const  Pokemon = (props) => {
-  const { match } = props;
+  const { match, history } = props;
   const { params} = match
   const { pokemonid }  = params;
   const [pokedexData,setPokedexData] = useState();
@@ -56,46 +64,65 @@ const  Pokemon = (props) => {
             </Grid> 
             <Grid item xs = {10} sm = {8} md = {6}>
               <Paper>
-                <ArrowBack/>
-              <Typography variant = 'h4' className = {classes.pokemonName}>
-                {`${capitalizeFirst(name)}`}
-                <img src = {front_default} alt = ''></img>
-              </Typography>
-              <img src = {pokemonImg} style = {{height:'300px',width:'200px'}} alt = '' className = {classes.pokemomImage}></img>
-              <img src = {back_default} style = {{height:'300px',width:'200px'}} alt = '' className = {classes.pokemomImage}></img>
-              <img src = {front_shiny} style = {{height:'300px',width:'200px'}} alt = '' className = {classes.pokemomImage}></img>
-              <Typography variant = 'h2' className = {classes.pokemonName}>
-                Pokemon info
-              </Typography>
-              <Grid container item className = {classes.pokemomInfo}>
-                <Grid item xs = {4}>
-                  <Typography >
-                    {'Species: '}
-                    <Link href = {species.url}>{species.name}</Link>
-                  </Typography>
-                </Grid> 
-                <Grid item xs = {4}>
-                  <Typography >
-                    {`Weight: ${weight}kg`}
-                  </Typography>
-                </Grid> 
-                <Grid item xs = {4}>
-                <Typography >
-                {`Height: ${height}cm`}
-                </Typography>
+                <Grid container item>
+                  <Grid item xs = {4}>
+                    <IconButton
+                      onClick = {()=>history.push('/')}
+                     >
+                      <ArrowBack/>
+                    </IconButton>
+                  </Grid> 
+                  <Grid item xs = {6}>
+                    <Typography variant = 'h4' className = {classes.pokemonName}>
+                      {`${capitalizeFirst(name)}`}
+                      <img src = {front_default} alt = ''></img>
+                    </Typography>
+                  </Grid>
                 </Grid>
-              </Grid>
-              {`Types:`}
-              <Typography variant = 'h6' >
-                {types?.map(t=>
-                  <Typography>{t['type'].name}</Typography>
-                  )
-                }
-              </Typography>
+                <Grid container item>
+                  <Grid item xs = {4}>
+                    <img src = {pokemonImg} style = {{height:'300px',width:'200px'}} alt = '' className = {classes.pokemonImage}></img>
+                  </Grid>
+                  <Grid item xs = {4}>
+                    <img src = {back_default} style = {{height:'300px',width:'200px'}} alt = '' className = {classes.pokemonImage}></img>
+                  </Grid>
+                  <Grid item xs = {4}>
+                    <img src = {front_shiny} style = {{height:'300px',width:'200px'}} alt = '' className = {classes.pokemonImage}></img>
+                  </Grid>
+                </Grid>
+                <Typography variant = 'h2' className = {classes.pokemonName}>
+                  Pokemon info
+                </Typography>
+                <Grid container item className = {classes.pokemomInfo}>
+                  <Grid item xs = {4}>
+                    <Typography >
+                      {'Species: '}
+                      <Link href = {species.url}>{species.name}</Link>
+                    </Typography>
+                  </Grid> 
+                  <Grid item xs = {4}>
+                    <Typography >
+                      {`Weight: ${weight}kg`}
+                    </Typography>
+                  </Grid> 
+                  <Grid item xs = {4}>
+                  <Typography >
+                  {`Height: ${height}cm`}
+                  </Typography>
+                  </Grid>
+                </Grid>
+                <Typography variant = 'h3' className = {classes.pokemonName}>Types</Typography>
+                <Grid container item>
+                  {types?.map(t=>
+                      <Grid item xs = {2} className = {classes.pokemonTypes}>
+                          <Typography variant = 'h6'>{t['type'].name}</Typography>
+                      </Grid>
+                    )
+                  }
+                </Grid>
               </Paper>
             </Grid>
             <Grid item xs = {1} sm = {2} md = {3}>
-
             </Grid>
           </Grid>
        
