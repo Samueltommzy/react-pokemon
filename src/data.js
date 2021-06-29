@@ -1,4 +1,4 @@
-export default {
+export default data = {
   "1": {
     name: "bulbasaur",
     id: 1,
