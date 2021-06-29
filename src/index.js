@@ -3,6 +3,7 @@ import ReactDOM from 'react-dom';
 import App from './App';
 import { Router } from 'react-router-dom';
 import { createBrowserHistory } from 'history';
+import CssBaseline from "@material-ui/core/CssBaseline";
 
 import reportWebVitals from './reportWebVitals';
 const history  = createBrowserHistory();
@@ -10,6 +11,7 @@ const history  = createBrowserHistory();
 ReactDOM.render(
   <React.StrictMode>
     <Router history = {history}>
+      <CssBaseline/>
       <App />
     </Router> 
   </React.StrictMode>,

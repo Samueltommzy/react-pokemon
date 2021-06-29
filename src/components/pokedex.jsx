@@ -1,15 +1,18 @@
-import { AppBar, Card, CardContent, Grid, Toolbar,CircularProgress, CardMedia, Typography, TextField } from '@material-ui/core';
+import { Card, CardContent, Grid, CircularProgress, CardMedia, Typography } from '@material-ui/core';
 import { fade, makeStyles } from '@material-ui/core/styles';
 import React, { useEffect, useState } from 'react';
 import Pagination from '@material-ui/lab/Pagination';
 import axios from 'axios';
-import { Search } from '@material-ui/icons';
+import clsx from 'clsx';
+import NavBar from './NavBar';
 
+const drawerWidth = 100;
 const useStyles = makeStyles((theme)=>({
   pokedexStyle :{
     paddingLeft: '30px',
     paddingTop : '20px',
-    paddingRight: '30px'
+    paddingRight: '30px',
+
   },
   cardMedia :{
     margin: 'auto'
@@ -36,8 +39,35 @@ const useStyles = makeStyles((theme)=>({
     '& > *': {
       marginTop: theme.spacing(2),
       // marginLeft: theme.spacing(2),
-    },
-  }
+    }
+  },
+  root: {
+    display: 'flex',
+  },
+  content: {
+    flexGrow: 1,
+    padding: theme.spacing(3),
+    transition: theme.transitions.create('margin', {
+      easing: theme.transitions.easing.sharp,
+      duration: theme.transitions.duration.leavingScreen,
+    }),
+    marginLeft: -drawerWidth,
+  },
+  contentShift: {
+    transition: theme.transitions.create('margin', {
+      easing: theme.transitions.easing.easeOut,
+      duration: theme.transitions.duration.enteringScreen,
+    }),
+    marginLeft: 0,
+  },
+  drawerHeader: {
+    display: 'flex',
+    alignItems: 'center',
+    padding: theme.spacing(5, 1),
+    // necessary for content to be below app bar
+    ...theme.mixins.toolbar,
+    justifyContent: 'flex-end',
+  },
 }));
 
 /**
@@ -47,6 +77,7 @@ const useStyles = makeStyles((theme)=>({
 export const capitalizeFirst = (data) => {
   return data.toLowerCase().replace(data[0],data[0].toUpperCase())
 }
+
 const Pokedex = (props) => {
   const classes = useStyles();
   const [pokedexData,setPokedexData] = useState({});
@@ -55,7 +86,17 @@ const Pokedex = (props) => {
   const [offset,setOffset] = useState(0);
   const [totalPage,setTotalPage] = useState(90);
   const { history } = props
-  
+  const [open,setOpen] = useState(false);
+
+  const handleDrawerOpen = () => {
+    setOpen(true);
+  };
+  const handleDrawerClose = () => {
+    setOpen(false);
+  };
+  const handleSearchChange = (e) => {
+    setFilter(e.target.value);
+  }
   useEffect(()=>{
     async function getPokeData(){
       const pokemonData = await axios.get(`https://pokeapi.co/api/v2/pokemon?limit=${limit}&offset=${offset}`);
@@ -73,9 +114,6 @@ const Pokedex = (props) => {
     getPokeData();
   },[offset,limit])
 
-  const handleSearchChange = (e) => {
-    setFilter(e.target.value);
-  }
   const handlePagination = (event,value)=>{
     if(value === 1){
       setOffset(0)
@@ -87,15 +125,12 @@ const Pokedex = (props) => {
     }
   }
   return (
-    <>
-    <AppBar position = 'static'>
-      <Toolbar>
-        <div className = {classes.searchContainer}>
-          <Search className = {classes.searchIcon}/>
-          <TextField className = {classes.searchInput} label ='Pokemon' variant = 'standard' onChange = {(e)=>handleSearchChange(e)} />
-        </div>
-      </Toolbar>
-    </AppBar>
+    <div className = {classes.root}>
+    <NavBar onOpen = {handleDrawerOpen} onClose = {handleDrawerClose} open = {open} searchChange = {(e)=>handleSearchChange(e)} history/>
+    <main 
+      className = {clsx(classes.content,{[classes.contentShift]:open})}
+    >
+      <div className={classes.drawerHeader} />
     {
       pokedexData ? (
         <Grid container spacing = {2} className = {classes.pokedexStyle}>
@@ -136,7 +171,8 @@ const Pokedex = (props) => {
       </Grid>
       <Grid item xs = {1} sm = {4} ></Grid>
     </Grid> 
-    </>
+    </main>
+    </div>
   )
 }
 
