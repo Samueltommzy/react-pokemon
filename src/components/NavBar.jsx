@@ -9,7 +9,7 @@ import {
   TextField,
   IconButton
 } from '@material-ui/core';
-import { MoveToInbox,Mail,Menu, Inbox} from '@material-ui/icons';
+import { Mail,Menu, Inbox} from '@material-ui/icons';
 import { Search, ChevronLeft, ChevronRight } from '@material-ui/icons';
 import { fade, makeStyles,useTheme } from '@material-ui/core/styles';
 import clsx from 'clsx';
@@ -75,7 +75,6 @@ const useStyles = makeStyles((theme) => ({
 const Drawer = (props) => {
   const classes = useStyles();
   const theme = useTheme();
-  console.log('props',props)
   const { onOpen, onClose, open, searchChange, history } = props;
   const itemsList = [
     {

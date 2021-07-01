@@ -108,7 +108,6 @@ const Pokedex = (props) => {
           sprite : `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${index+1}.png`
         }
       });
-      console.log('ddd',pokemonData.data)
       setPokedexData(pokeData);
     }
     getPokeData();
@@ -121,7 +120,6 @@ const Pokedex = (props) => {
     else{
       const offsetVal = (value * limit) - limit ;
       setOffset(offsetVal);
-      console.log('offset',offsetVal)
     }
   }
   return (
